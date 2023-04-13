@@ -1,41 +1,85 @@
 from kivy.lang import Builder
 
-from kivymd.toast import toast
-from kivymd.uix.bottomsheet import MDListBottomSheet
 from kivymd.app import MDApp
 
 KV = '''
+<DrawerClickableItem@MDNavigationDrawerItem>
+    focus_color: "#e7e4c0"
+    text_color: "#4a4939"
+    icon_color: "#4a4939"
+    ripple_color: "#c5bdd2"
+    selected_color: "#0c6c4d"
+
+
+<DrawerLabelItem@MDNavigationDrawerItem>
+    text_color: "#4a4939"
+    icon_color: "#4a4939"
+    focus_behavior: False
+    selected_color: "#4a4939"
+    _no_ripple_effect: True
+
+
 MDScreen:
 
-    MDTopAppBar:
-        title: "Example BottomSheet"
-        pos_hint: {"top": 1}
-        elevation: 4
+    MDNavigationLayout:
 
-    MDRaisedButton:
-        text: "Выберите тип счетчика"
-        on_release: app.show_example_list_bottom_sheet()
-        pos_hint: {"center_x": .5, "center_y": .5}
+        MDScreenManager:
+
+            MDScreen:
+
+                MDTopAppBar:
+                    title: "10to8power"
+                    elevation: 4
+                    pos_hint: {"top": 1}
+                    md_bg_color: "#e7e4c0"
+                    specific_text_color: "#4a4939"
+                    left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+
+        MDNavigationDrawer:
+            id: nav_drawer
+            radius: (0, 16, 16, 0)
+
+            MDNavigationDrawerMenu:
+
+                MDNavigationDrawerHeader:
+                    title_color: "#4a4939"
+                    icon: "logo.jpg"
+                    text: "Меню"
+                    spacing: "4dp"
+                    padding: "12dp", 0, 0, "56dp"
+
+                
+
+                MDNavigationDrawerLabel:
+                    text: "Labels"
+
+                DrawerLabelItem:
+                    icon: "information-outline"
+                    text: "О нас"
+
+                DrawerLabelItem:
+                    icon: "information-outline"
+                    text: "Язык"
+                    
+                    
+                MDNavigationDrawerDivider:
+                 
+                MDNavigationDrawerLabel:
+                    text: "Обратная связь:"
+
+                MDNavigationDrawerDivider:
+                    
+                DrawerClickableItem:
+                    icon: "gmail"
+                    text_right_color: "#4a4939"
+                    text: "iasautkin@gmail.com"
 '''
 
 
 class Example(MDApp):
     def build(self):
+        self.theme_cls.theme_style = "Light"
         return Builder.load_string(KV)
-
-    def callback_for_menu_items(self, *args):
-        toast(args[0])
-
-    def show_example_list_bottom_sheet(self):
-        bottom_sheet_menu = MDListBottomSheet()
-        for i in range(1, 4):
-            bottom_sheet_menu.add_item(
-                f"Standart Item {i}",
-                lambda x, y=i: self.callback_for_menu_items(
-                    f"Standart Item {y}"
-                ),
-            )
-        bottom_sheet_menu.open()
 
 
 Example().run()
